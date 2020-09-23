@@ -39,6 +39,30 @@ function chessnutts(numChess){
     return currentString;
 }
 
+//listeners for form submission
+function bookmarkSubmit(){
+    $('#js-add-bookmark-form').submit(function(event){
+        event.preventDefault();
+        const values = {};
+        values.title = $('.js-bookmark-title').val();
+        values.url =  $('.js-bookmark-url').val();
+        values.description = $('.js-bookmark-description').val();
+        values.rating = $('.js-bookmark-rating').val();
+        API.addBookmark(values)
+        .then((newBookmark) => {
+          STORE.addBookmark(newBookmark);
+         render();                   
+    })
+    .catch((err) => {
+        STORE.setError(err.message);
+        renderError();
+      });
+  });
+    
+}
+
+
+
 //error handling
 function renderError(){
     if (STORE.error){
@@ -64,3 +88,21 @@ function render(){
 
     $('.js-bookmarks-list').html(generateBookmarksListString(bookmarks));
 }
+
+function getIdFromElement(bookmark){
+    return $(bookmark)
+    .closest('.js-bookmark-element')
+    .data('item-id');
+}
+
+
+//filter the minimum rating
+function minimumRatingHandler(){
+    $('.js-bookmark-rating-filter').on('change', event =>{
+        let rating = $(event.target).val();
+        STORE.minimumRating =rating;
+        render();
+    });
+}
+
+//bind event listeners 
