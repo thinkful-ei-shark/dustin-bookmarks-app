@@ -1,8 +1,27 @@
-button{
- color: green;
- border: solid black ;
- border-radius: 15px;
-}
+
 body{
-    color: black;
+    background-color: #C8C8C8 ;
+}
+.bodywrap{
+    display: flex;
+    flex-flow: column wrap;
+    background-color: #ffffff;
+    max-width: 900px;;
+    margin-right: auto;
+    margin-left: auto;
+    width: 65%;
+    min-width: 920px;
+}
+/* submit button */
+.sub-it{
+    box-shadow: 5px 10px #888888;
+    background-color: green;
+    border: solid black ;
+     border-radius: 15px;
+}
+h1{
+    text-shadow: 2px 2px #888888;
+}
+.form-group{
+    box-shadow: 2px #888888;
 }

@@ -1,6 +1,80 @@
 //create bookmark html
 function createBookmarkElement(bookmark){
     return `
+    <div class="container">
+    <div class="error-container"></div>
+    <div class="row">
+      <div class="col-xs-12 col-md-4 col-md-offset-4">
+        <header role="banner">
+          <h1>My Bookmarks</h1>
+        </header>
+      </div>
+    </div>
+
+    <!-- Add Bookmarks Form -->
+    <section role="region">
+      <div class="row">
+        <div class="form-container col-xs-12 col-md-4 col-md-offset-4">
+            <form id="js-add-bookmark-form">
+              <div class="form-group">
+                <label for="bookmark-title">Title</label>
+                <input type="text" name="bookmark-title" class="form-control js-bookmark-title" placeholder="Enter a title" required aria-label="bookmark-title">
+              </div>
+              <div class="form-group">
+                <label for="bookmark-url">URL ('https://' is required)</label>
+                <input type="url" name="bookmark-url" class="form-control js-bookmark-url" placeholder="http(s)://" required aria-label="bookmark-url">
+              </div>
+              <div class="form-group">
+                <label for="bookmark-description">Description</label>
+                <input type="text" name="bookmark-description" class="form-control js-bookmark-description" placeholder="Enter a description..." required aria-label="bookmark-description">
+              </div>
+              <div class="form-group">
+              <label for="rating">Rating</label>
+              <select name="rating" class="js-bookmark-rating" aria-label="rating-dropdown">
+                <option value="1">1-Star</option>
+                <option value="2">2-Stars</option>
+                <option value="3">3-Stars</option>
+                <option value="4">4-Stars</option>
+                <option value="5">5-Stars</option>
+              </select>
+              </div>
+              <div class="form-group">
+              <button type="submit" class="btn btn-success add-bookmark-button">Submit</button>
+              </div>  
+            </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter Minimum Rating -->
+    <section role="region">
+      <div class="row">
+        <div class="col-xs-12 col-md-4 col-md-offset-4 rating-filter">
+          Sort by bookmarks with at least:
+          <select name="Rating filter" class="js-bookmark-rating-filter" aria-label="rating-filter-dropdown">
+            <option value="1">1-Star</option>
+            <option value="2">2-Stars</option>
+            <option value="3">3-Stars</option>
+            <option value="4">4-Stars</option>
+            <option value="5">5-Stars</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+  <!-- Bookmarks List -->
+    <main role="main" aria-live="polite">
+      <section role="region">
+        <div class="row">
+          <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <div class="panel-group bookmarks-list js-bookmarks-list" id="accordion" role="tablist" aria-multiselectable="true">
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+  </div>
     <div class="panel panel-default js-bookmark-element" data-item-id="${bookmark.id}">
     <div class="panel-heading" role="tab">
       <h3 class="panel-title">
@@ -28,7 +102,7 @@ function generateBookmarksListString(bookmarkList){
     return bookmarks.join('')
 }
 
-//chessnutt rating
+//chessnutt rating**
 function chessnutts(numChess){
     const nutHTML = '<span class ="chessnuttrating"</span>'
 
@@ -57,7 +131,7 @@ function bookmarkSubmit(){
         STORE.setError(err.message);
         renderError();
       });
-  });
+  });              
     
 }
 
@@ -106,3 +180,8 @@ function minimumRatingHandler(){
 }
 
 //bind event listeners 
+return {
+    bindEventListeners,
+    render
+
+}

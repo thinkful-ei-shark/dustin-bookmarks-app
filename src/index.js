@@ -1,18 +1,16 @@
 import $ from 'jquery';
-import './bookmark.css'
+import './bookmark.css';
+import bookmark from './bookmark';
+import store from './store';
+import API from './api'
 
-function main() {
-  console.log('DOM is loaded');
-  api.getItems()
-  .then((items) =>{
-    items.forEach((item) => store.addItem(item));
-    bookMarkedItem.render();
-  });
-  bookMark.bindEventListeners();
-  bookMark.render();
+$(document).ready(function(){
+ bookmark.bindEventListeners();
 
-  const startMsg = $('<p>Webpack is working!</p>');
-  $('#root').append(startMsg);
-}
-
-$(main);
+  API.getBookmarks()
+    .then((bookmark) => {
+      bookmark.forEach((bookmark) => STORE.addBookmark(bookmark));
+      bookmark.render();
+    })
+    .catch(err => console.log(err.message));
+});
