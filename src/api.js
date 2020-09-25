@@ -1,9 +1,13 @@
 
-
-    const BASE_URL ='https://thinkful-list-api.herokuapp.com/dustin'
+const corsURL = "https://cors-anywhere.herokuapp.com/"
+const apiURL = "https://thinkful-list-api.herokuapp.com/dustin"
+    const BASE_URL = apiURL
 
     const apiFetch = function(...arg){
         let error;
+        // const proxyurl = "https://cors-anywhere.herokuapp.com/"; 
+        // const url = "https://example.com"; // site that doesn’t send Access-Control-* 
+        // fetch(proxyurl + url)
         return fetch(...arg)
         .then(response => {
             if(!response.ok){
@@ -16,9 +20,9 @@
             return response.json();
         })
         .then(data =>{
-            if (err){
-                err.message = data.message;
-                return Promise.reject(err)
+            if (error){
+                error.message = data.message;
+                return Promise.reject(error)
             }
             // return normal
             return data;
@@ -26,11 +30,11 @@
     }
     // GET Function
     function getBookmarks(){
-        return apiFetch(`${BASE_URL}/bookmark`);
+        return apiFetch(`${BASE_URL}/bookmarks`);
       }
     function addBookmark(object){
         const newItem = JSON.stringify(object);
-        return apiFetch(`${BASE_URL}/bookmark`,{
+        return apiFetch(`${BASE_URL}/bookmarks`,{
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: newItem,
@@ -39,19 +43,19 @@
     // PATCh
     function editBookmark(id,updateData){
         const newItem = JSON.stringify(object);
-        return apiFetch(`${BASE_URL}/bookmark`,{
+        return apiFetch(`${BASE_URL}/bookmarks`,{
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: newData,
     });
+}
     function deleteBookmarks(id){
-        return fetch(`${BASE_URL}/bookmark/${id}`,{
+        return apiFetch(`${BASE_URL}/bookmarks/${id}`,{
             method: 'DELETE',
-            headers: {'Content-Type': 'application/json'},
-            body: ''
+          
         });
     }
-}
+
     export default {
         getBookmarks,
         addBookmark,

@@ -1,5 +1,8 @@
 import $ from 'jquery';
+import api from './api'
+import store from './store'
 
+const deleteBookmarks = api.deleteBookmarks
 //create bookmark html for form
 function createBookmarkElement(bookmark){
     return `
@@ -9,13 +12,13 @@ function createBookmarkElement(bookmark){
       <h3 class="panel-title">
         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#${bookmark.id}" aria-expanded="true" aria-controls="${bookmark.id}">
           ${bookmark.title}
-          <span class="chessnutt-rating">${chessnutts(bookmark.rating)}</span>
+          <span class="bookmark-rating">${chessnutts(bookmark.rating)}</span>
         </a>
       </h3>
     </div>
     <div id="${bookmark.id}" class="panel-collapse collapse" role="tabpanel">
       <div class="panel-body">
-        <p data-id="${bookmark.id}">${bookmark.description}</p>
+        <p data-id="${bookmark.id}">dlfkjsdf</p>
         <p><a data-id="${bookmark.id}" target="_blank" href="${bookmark.url}">Visit Site</a></p>
         <button type="button" class="btn btn-danger js-bookmark-delete" data-id="${bookmark.id}">Delete</button>
       </div>
@@ -24,10 +27,25 @@ function createBookmarkElement(bookmark){
     
     `
 }
+function render(){
+    renderError();
+    let bookmark = store.bookmark.filter(bookmark => {
+        return bookmark.rating >= store.minimumRating;
+    });
+
+    $('.js-bookmarks-list').html(generateBookmarksListString(bookmark));
+
+
+function getItemIdFromElement(bookmark){
+    return $(bookmark)
+    .closest('.js-bookmark-element')
+    .data('item-id');
+}
+}
 
 //create bookmark elements
 function generateBookmarksListString(bookmarkList){
-    const bookmark =boomarksList.map(bookmark => generateBookmarkElement(bookmark));
+    const bookmark = bookmarkList.map(bookmark => createBookmarkElement(bookmark));
     return bookmark.join('')
 }
 
@@ -46,19 +64,19 @@ function chessnutts(numChess){
 function handleNewBookmarkSubmit(){
     $('#js-add-bookmark-form').submit(function(event){
       event.preventDefault();
-      const values = {};
-      values.title = $('.js-bookmark-title').val();
-      values.url = $('.js-bookmark-url').val();
-      values.description = $('.js-bookmark-description').val();
-      values.rating = $('.js-bookmark-rating').val();
+      const chessnuttValue = {};
+      chessnuttValue.title = $('.js-bookmark-title').val();
+      chessnuttValue.url = $('.js-bookmark-url').val();
+      chessnuttValue.description = $('.js-bookmark-description').val();
+      chessnuttValue.rating = $('.js-bookmark-rating').val();
       // $('#js-add-bookmark-form').trigger('reset');
-      API.addBookmark(values)
+      api.addBookmark(chessnuttValue)
         .then((newBookmark) => {
-          STORE.addBookmark(newBookmark);
+          store.addBookmark(newBookmark);
           render();
         })
-        .catch((err) => {
-          STORE.setError(err.message);
+        .catch((error) => {
+         store.setError(error.message);
           renderError();
         });
     });
@@ -67,15 +85,14 @@ function handleNewBookmarkSubmit(){
 function removeBookmarkWhenClicked() {
     $('.js-bookmarks-list').on('click', '.js-bookmark-delete', event => {
       const id = getItemIdFromElement(event.currentTarget);
-
-      API.deleteBookmarks(id)
+      api.deleteBookmarks(id)
         .then(() => {
-          STORE.findAndDelete(id);
+          store.findAndDelete(id);
           render();
         })
-        .catch((err) => {
+        .catch((error) => {
           console.log(err);
-          STORE.setError(err.message);
+          store.setError(error.message);
           renderError();
         });
     });
@@ -83,9 +100,8 @@ function removeBookmarkWhenClicked() {
 
 //error handling
 function renderError(){
-    if (STORE.error){
-        const err = generateError(STORE.error);
-        $('.error-container').html(err);
+    if (store.error){
+        $('.error-container').html(store.error);
     }else {
         $('.error-container').empty();
     }
@@ -93,32 +109,19 @@ function renderError(){
 
 function closeError(){
     $('.error-container').on('click','#cancel-error',() =>{
-        STORE.setError(null);
+        store.setError(null);
         renderError();
     });
 }
 
-function render(){
-    renderError();
-    let bookmark = STORE.bookmark.filter(bookmark => {
-        return bookmark.rating >= STORE.minimumRating;
-    });
 
-    $('.js-bookmarks-list').html(generateBookmarksListString(bookmark));
-}
-
-function getIdFromElement(bookmark){
-    return $(bookmark)
-    .closest('.js-bookmark-element')
-    .data('item-id');
-}
 
 
 //filter the minimum rating
 function minimumRatingHandler(){
     $('.js-bookmark-rating-filter').on('change', event =>{
         let rating = $(event.target).val();
-        STORE.minimumRating =rating;
+        store.minimumRating =rating;
         render();
     });
 }
@@ -128,8 +131,9 @@ function bindEventListeners(){
     handleNewBookmarkSubmit();
     removeBookmarkWhenClicked();
     minimumRatingHandler();
-    deleteBookmarks();
-    createBookmarkElement();
+
+    
+   
 }
 
 export default {
