@@ -5,28 +5,31 @@ import store from './store'
 const deleteBookmarks = api.deleteBookmarks
 //create bookmark html for form
 function createBookmarkElement(bookmark){
+    console.log(bookmark)
     return `
-    
-    <div class="panel panel-default js-bookmark-element" data-item-id="${bookmark.id}">
-    <div class="panel-heading" role="tab">
+    <section>
+    <div class=" container  js-bookmark-element" data-item-id="${bookmark.id}">
+    <div class="" role="tab">
       <h3 class="panel-title">
-        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#${bookmark.id}" aria-expanded="true" aria-controls="${bookmark.id}">
+        <a href="#" class = "expand-button" bookmark-id = "${bookmark.id}">
           ${bookmark.title}
-          <span class="bookmark-rating">${chessnutts(bookmark.rating)}</span>
+          <i class="bookmark-rating">${chessnutts(bookmark.rating)}</i>
         </a>
       </h3>
     </div>
-    <div id="${bookmark.id}" class="panel-collapse collapse" role="tabpanel">
-      <div class="panel-body">
-        <p data-id="${bookmark.id}">dlfkjsdf</p>
+    <div id="${bookmark.id}" class="js-bookmark-description${bookmark.expanded?"":" hidden"}" role="tabpanel">
+      <div class="col-25">
+        <p data-id="${bookmark.id}">${(bookmark.desc)}</p>
         <p><a data-id="${bookmark.id}" target="_blank" href="${bookmark.url}">Visit Site</a></p>
         <button type="button" class="btn btn-danger js-bookmark-delete" data-id="${bookmark.id}">Delete</button>
       </div>
     </div>
   </div>
+  </div>
     
     `
 }
+
 function render(){
     renderError();
     let bookmark = store.bookmark.filter(bookmark => {
@@ -35,12 +38,13 @@ function render(){
 
     $('.js-bookmarks-list').html(generateBookmarksListString(bookmark));
 
+    console.log(store.bookmark)
 
+}
 function getItemIdFromElement(bookmark){
     return $(bookmark)
     .closest('.js-bookmark-element')
     .data('item-id');
-}
 }
 
 //create bookmark elements
@@ -51,7 +55,9 @@ function generateBookmarksListString(bookmarkList){
 
 //chessnutt rating**
 function chessnutts(numChess){
-    const nutHTML = '<span class ="chessnutt-rating"</span>'
+    const nutHTML = '<i class="fas fa-grin-stars"></i>'
+
+
 
     let currentString = '';
     for (let i = 0; i < numChess; i++){
@@ -67,7 +73,7 @@ function handleNewBookmarkSubmit(){
       const chessnuttValue = {};
       chessnuttValue.title = $('.js-bookmark-title').val();
       chessnuttValue.url = $('.js-bookmark-url').val();
-      chessnuttValue.description = $('.js-bookmark-description').val();
+      chessnuttValue.desc = $('.js-bookmark-description').val();
       chessnuttValue.rating = $('.js-bookmark-rating').val();
       // $('#js-add-bookmark-form').trigger('reset');
       api.addBookmark(chessnuttValue)
@@ -97,7 +103,14 @@ function removeBookmarkWhenClicked() {
         });
     });
   }
-
+const handleToggleExpand =()=>{
+    $("main").on("click",".expand-button",function(e){
+        e.preventDefault();
+        let id = $(this).attr("bookmark-id")
+        store.findAndToggleExpanded(id)
+        render()
+    })
+}
 //error handling
 function renderError(){
     if (store.error){
@@ -131,6 +144,7 @@ function bindEventListeners(){
     handleNewBookmarkSubmit();
     removeBookmarkWhenClicked();
     minimumRatingHandler();
+    handleToggleExpand();
 
     
    

@@ -40,7 +40,7 @@ const apiURL = "https://thinkful-list-api.herokuapp.com/dustin"
             body: newItem,
         });
     }
-    // PATCh
+    // PATCH
     function editBookmark(id,updateData){
         const newItem = JSON.stringify(object);
         return apiFetch(`${BASE_URL}/bookmarks`,{

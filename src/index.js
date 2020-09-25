@@ -14,5 +14,4 @@ $(document).ready(function(){
  })
     .catch(error => console.log(error.message));
 });
-bookmark.bindEventListeners();
 bookmark.render();
