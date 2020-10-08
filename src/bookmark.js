@@ -104,7 +104,7 @@ function removeBookmarkWhenClicked() {
     });
   }
 const handleToggleExpand =()=>{
-    $("main").on("click",".expand-button",function(e){
+    $("section").on("click",".expand-button",function(e){
         e.preventDefault();
         let id = $(this).attr("bookmark-id")
         store.findAndToggleExpanded(id)
