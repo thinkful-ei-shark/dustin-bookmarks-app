@@ -75,6 +75,7 @@ function handleNewBookmarkSubmit(){
       chessnuttValue.url = $('.js-bookmark-url').val();
       chessnuttValue.desc = $('.js-bookmark-description').val();
       chessnuttValue.rating = $('.js-bookmark-rating').val();
+      $("#js-add-bookmark-form").trigger("reset")
  
 
      
