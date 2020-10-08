@@ -1,6 +1,6 @@
 
 
-Git pages https://dustin1386.github.io/Bookmark-app/
+Git pages https://thinkful-ei-shark.github.io/dustin-bookmarks-app/
 
 User Stories
 As a user:
