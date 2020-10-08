@@ -55,7 +55,7 @@ function generateBookmarksListString(bookmarkList){
 
 //chessnutt rating**
 function chessnutts(numChess){
-    const nutHTML = '<i class="fas fa-grin-stars"></i>'
+    const nutHTML = '<i class="fa fa-thumbs-up"></i>'
 
 
 
@@ -71,11 +71,14 @@ function handleNewBookmarkSubmit(){
     $('#js-add-bookmark-form').submit(function(event){
       event.preventDefault();
       const chessnuttValue = {};
-      chessnuttValue.title = $('.js-bookmark-title').val();
-      chessnuttValue.url = $('.js-bookmark-url').val();
-      chessnuttValue.desc = $('.js-bookmark-description').val();
-      chessnuttValue.rating = $('.js-bookmark-rating').val();
-      // $('#js-add-bookmark-form').trigger('reset');
+      chessnuttValue.title = $('.js-bookmark-title').val("");
+      chessnuttValue.url = $('.js-bookmark-url').val("");
+      chessnuttValue.desc = $('.js-bookmark-description').val("");
+      chessnuttValue.rating = $('.js-bookmark-rating').val("");
+      $(event.currentTarget).closest('form').find("input[type=text], textarea").val("");
+
+     
+      
       api.addBookmark(chessnuttValue)
         .then((newBookmark) => {
           store.addBookmark(newBookmark);
@@ -87,6 +90,8 @@ function handleNewBookmarkSubmit(){
         });
     });
   }
+
+
 
 function removeBookmarkWhenClicked() {
     $('.js-bookmarks-list').on('click', '.js-bookmark-delete', event => {
@@ -130,6 +135,8 @@ function closeError(){
 
 
 
+
+
 //filter the minimum rating
 function minimumRatingHandler(){
     $('.js-bookmark-rating-filter').on('change', event =>{
@@ -145,6 +152,8 @@ function bindEventListeners(){
     removeBookmarkWhenClicked();
     minimumRatingHandler();
     handleToggleExpand();
+    clearFormWhenSubmit()
+   
 
     
    
