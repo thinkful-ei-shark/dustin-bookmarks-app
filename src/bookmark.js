@@ -71,10 +71,10 @@ function handleNewBookmarkSubmit(){
     $('#js-add-bookmark-form').submit(function(event){
       event.preventDefault();
       const chessnuttValue = {};
-      chessnuttValue.title = $('.js-bookmark-title').val("");
-      chessnuttValue.url = $('.js-bookmark-url').val("");
-      chessnuttValue.desc = $('.js-bookmark-description').val("");
-      chessnuttValue.rating = $('.js-bookmark-rating').val("");
+      chessnuttValue.title = $('.js-bookmark-title').val();
+      chessnuttValue.url = $('.js-bookmark-url').val();
+      chessnuttValue.desc = $('.js-bookmark-description').val();
+      chessnuttValue.rating = $('.js-bookmark-rating').val();
  
 
      
