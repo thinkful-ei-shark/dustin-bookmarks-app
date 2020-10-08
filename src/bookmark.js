@@ -75,7 +75,7 @@ function handleNewBookmarkSubmit(){
       chessnuttValue.url = $('.js-bookmark-url').val("");
       chessnuttValue.desc = $('.js-bookmark-description').val("");
       chessnuttValue.rating = $('.js-bookmark-rating').val("");
-      $(event.currentTarget).closest('form').find("input[type=text], textarea").val("");
+ 
 
      
       
