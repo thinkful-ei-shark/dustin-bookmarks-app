@@ -1,9 +1,9 @@
 # dustin-bookmarks-app
 This is a project that uses HTML, CSS, jQuery, and AJAX to create a bookmark 
 
-https://thinkful-ei-shark.github.io/dustin-bookmarks-app/
 
 Link to live URL:https://thinkful-ei-shark.github.io/dustin-bookmarks-app/
+
 Link to repo: https://github.com/thinkful-ei-shark/dustin-bookmarks-app/tree/gh-pages
 
 As a user:
