@@ -4,10 +4,89 @@ import store from './store'
 
 const deleteBookmarks = api.deleteBookmarks
 //create bookmark html for form
+
+
+const generateForm = function(){
+  // if(store.appStarted){
+  //   return ""
+  // }
+  store.appStarted = true
+  return `
+  <div class="container">
+  <header class="banner">
+          <h1>The Greatest Bookmark app I've Ever Created</h1>
+      <form id="js-add-bookmark-form">
+      <div class="row">
+      <div class="col-25">
+        <label for="bookmark-title">Title</label>
+      </div>
+      <div class="col-75">
+      <input type="text" id="bookmark-title" name="bookmark-title" class="form-control js-bookmark-title" placeholder="Enter a title" required aria-label="bookmark-title">
+      </div>
+      </div>
+      <div class="row">
+      <div class="col-25">
+        <label for="bookmark-url">URL ('https://' is required)</label>
+      </div>
+      <div class="col-75">
+        <input type="url" id="bookmark-url" name="bookmark-url" class="form-control js-bookmark-url" placeholder="http(s)://" required aria-label="bookmark-url">
+      </div>
+      </div>
+      <div class="row">
+      <div class="col-25">
+        <label for="bookmark-description">Description</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="bookmark-description" name="bookmark-description" class="form-control js-bookmark-description" placeholder="Enter a description..." required aria-label="bookmark-description">
+      </div>
+      </div>
+
+      <div class="row">
+      <div class="col-25">
+        <select name="rating" class="js-bookmark-rating" aria-label="rating-dropdown">
+          <option value="1">1-Chessnutt</option>
+          <option value="2">2-Chessnutts</option>
+          <option value="3">3-Chessnutts</option>
+          <option value="4">4-Chessnutts</option>
+          <option value="5">5-Chessnutts</option>
+        </select>
+        <div class="enter">
+          <button type="submit" class="sub-it">Submit</button>
+          </div>  
+      </div>
+      <section class="container">
+      <div class="drop">
+        <div>
+          Sort by Chessnuttst:
+          <select name="Rating filter" class="js-bookmark-rating-filter" aria-label="rating-filter-dropdown">
+            <option value="1">1-Chessnutt</option>
+            <option value="2">2-Chessnutts</option>
+            <option value="3">3-Chessnutts</option>
+            <option value="4">4-Chessnutts</option>
+            <option value="5">5-Chessnutts</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+      </form>
+    
+      </div> 
+ 
+
+  
+  
+  
+  `
+}
+
+
+
 function createBookmarkElement(bookmark){
     console.log(bookmark)
     return `
-    <section>
+    
+    
     <div class=" container  js-bookmark-element" data-item-id="${bookmark.id}">
     <div class="" role="tab">
       <h3 class="panel-title">
@@ -25,19 +104,24 @@ function createBookmarkElement(bookmark){
       </div>
     </div>
   </div>
-  </div>
+  
     
     `
 }
 
+
+
+
 function render(){
     renderError();
     let bookmark = store.bookmark.filter(bookmark => {
-        return bookmark.rating >= store.minimumRating;
+        return bookmark.rating >=  store.minimumRating;
     });
-
-    $('.js-bookmarks-list').html(generateBookmarksListString(bookmark));
-
+    let page = generateForm();
+    page +=generateBookmarksListString(bookmark);
+    $('main').html(page);
+    $(`.js-bookmark-rating-filter option[value='${store.minimumRating}']`).prop("selected", true)
+    bindEventListeners();
     console.log(store.bookmark)
 
 }
@@ -55,10 +139,7 @@ function generateBookmarksListString(bookmarkList){
 
 //chessnutt rating**
 function chessnutts(numChess){
-    const nutHTML = '<i class="fas fa-grin-stars"></i>'
-
-
-
+    const nutHTML = '<i class="fa fa-thumbs-up"></i>'
     let currentString = '';
     for (let i = 0; i < numChess; i++){
         currentString += nutHTML;
@@ -68,14 +149,18 @@ function chessnutts(numChess){
 
 //listeners for form submission new submissions
 function handleNewBookmarkSubmit(){
-    $('#js-add-bookmark-form').submit(function(event){
+    $('main').submit(function(event){
       event.preventDefault();
       const chessnuttValue = {};
       chessnuttValue.title = $('.js-bookmark-title').val();
       chessnuttValue.url = $('.js-bookmark-url').val();
       chessnuttValue.desc = $('.js-bookmark-description').val();
       chessnuttValue.rating = $('.js-bookmark-rating').val();
-      // $('#js-add-bookmark-form').trigger('reset');
+      $("#js-add-bookmark-form").trigger("reset")
+ 
+
+     
+      
       api.addBookmark(chessnuttValue)
         .then((newBookmark) => {
           store.addBookmark(newBookmark);
@@ -88,8 +173,10 @@ function handleNewBookmarkSubmit(){
     });
   }
 
+
+
 function removeBookmarkWhenClicked() {
-    $('.js-bookmarks-list').on('click', '.js-bookmark-delete', event => {
+    $('main').on('click', '.js-bookmark-delete', event => {
       const id = getItemIdFromElement(event.currentTarget);
       api.deleteBookmarks(id)
         .then(() => {
@@ -104,7 +191,7 @@ function removeBookmarkWhenClicked() {
     });
   }
 const handleToggleExpand =()=>{
-    $("section").on("click",".expand-button",function(e){
+    $("main").on("click",".expand-button",function(e){
         e.preventDefault();
         let id = $(this).attr("bookmark-id")
         store.findAndToggleExpanded(id)
@@ -130,14 +217,17 @@ function closeError(){
 
 
 
+
+
 //filter the minimum rating
 function minimumRatingHandler(){
-    $('.js-bookmark-rating-filter').on('change', event =>{
-        let rating = $(event.target).val();
-        store.minimumRating =rating;
-        render();
-    });
+  $('.js-bookmark-rating-filter').on('change', event =>{
+      let rating = $(event.target).val();
+      store.minimumRating = rating;
+      render();
+  });
 }
+
 //bind event listeners 
 function bindEventListeners(){
     closeError();
@@ -145,6 +235,9 @@ function bindEventListeners(){
     removeBookmarkWhenClicked();
     minimumRatingHandler();
     handleToggleExpand();
+   
+   
+   
 
     
    
